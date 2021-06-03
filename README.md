@@ -37,3 +37,8 @@ docker-compose stop
 
 The first time you access the site you'll have to run through CraftCMS's
 install process. You can reach the page at [http://localhost/index.php?p=admin/install](http://localhost/index.php?p=admin/install).
+
+## Todo
+
+* Use persistent volume for the main site storage
+* Add SSL/TLS support with Let's Encrypt
