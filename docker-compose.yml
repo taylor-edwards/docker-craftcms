@@ -5,6 +5,10 @@ services:
     ports:
       - 80:80
       - 443:443
+    volumes:
+      - certs:/etc/letsencrypt
+      - conf:/etc/apache2/sites-enabled
+      - www:/var/www
   postgres:
     image: postgres:13
     ports:
@@ -12,6 +16,9 @@ services:
     env_file:
       - .env
     volumes:
-      - db:/var/lib/postgresql/data:rw
+      - db:/var/lib/postgresql/data
 volumes:
+  certs:
+  conf:
   db:
+  www:
