@@ -6,8 +6,15 @@ with a Postgres database.
 First time set up:
 
 - Set database, user and password for Postgres in `.env`
-- (optional) Create volumes to persist storage and the database
-- Run the [CraftCMS installer](http://localhost/index.php?p=admin/install) after first start up
+- For local development:
+    - Access the site at [localhost](http://localhost) or add `127.0.0.1 craft.dev` to `/etc/hosts` to access it at [craft.dev](http://craft.dev)
+    - Run the [CraftCMS installer](http://localhost/index.php?p=admin/install) after first start up
+- For production releases:
+    - Set the `ServerName` in `vhost.conf` to your fully-qualified domain name. Add VirtualHost blocks and configure as needed for any subdomains or other functionality
+    - Access the site at your fully-qualified domain (FQDN), e.g. example.com
+    - Run the CraftCMS installer http://_example.com_/index.php?p=admin/install after first start up (replace `example.com` with your FQDN)
+    - Enable SSL interactively by running `docker exec -it ... sh` and then `certbot --apache` within the container
+
 
 The minimum `.env` file must include:
 
@@ -26,12 +33,19 @@ POSTGRES_PASSWORD=
 POSTGRES_DB=
 ```
 
-Starting and stopping the service:
+Managing the service locally:
 
 ```
-# start:
+# Start:
 docker-compose up
-# stop (or use Ctrl-C):
+
+# Enable SSL (production sites only)
+docker exec -it <pid> sh
+# at the container's prompt:
+certbot --apache
+# Ctrl-D to exit container
+
+# Stop:
 docker-compose stop
 ```
 
@@ -41,4 +55,3 @@ install process. You can reach the page at [http://localhost/index.php?p=admin/i
 ## Todo
 
 * Use persistent volume for the main site storage
-* Add SSL/TLS support with Let's Encrypt

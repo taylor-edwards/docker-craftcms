@@ -2,40 +2,40 @@
 FROM composer:2 as install
 WORKDIR /craft
 RUN composer create-project craftcms/craft .
+COPY .env .env.changes
+RUN cat .env.changes >> .env
+RUN rm -rf html && mv web html
 
 # create an Apache server with PHP 7 and extensions
 FROM php:7-apache as server
 RUN apt update
 
-# configure apache
-RUN a2enmod rewrite
-RUN . /etc/apache2/envvars && service apache2 restart
-
-# install ImageMagick
-RUN apt install -y imagemagick libmagickwand-dev
+# install ImageMagick, zip, PDO Postgres, and certbot
+RUN apt install -y imagemagick libmagickwand-dev \
+                   libzip-dev zip \
+                   libpq-dev \
+                   python python-certbot-apache
 RUN printf "\n" | pecl install imagick
 RUN docker-php-ext-enable imagick
-
-# install zip
-RUN apt install -y libzip-dev zip
 RUN docker-php-ext-configure zip --with-zip
-RUN docker-php-ext-install zip
-
-# install PDO Postgres
-RUN apt install -y libpq-dev
 RUN docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql
-RUN docker-php-ext-install pdo pdo_pgsql pgsql
+RUN docker-php-ext-install zip pdo pdo_pgsql pgsql
 
-# copy Craft installation and site files
+# configure Apache
 COPY --from=install --chown=www-data:www-data /craft /var/www
-COPY ./.env /var/www/.env.changes
-RUN cat /var/www/.env.changes >> /var/www/.env
-RUN rm -rf /var/www/html && mv /var/www/web /var/www/html
+COPY vhost.conf /etc/apache2/sites-enabled/vhost.conf
+RUN a2enmod rewrite && a2enmod ssl && a2enmod headers
+RUN . /etc/apache2/envvars && service apache2 restart
 
 EXPOSE 80/tcp
 EXPOSE 443/tcp
 
-# set up and start craft
-RUN echo "* * * * * * * * * * * * * * * * * * * * * * * * * * * *\n\
-Open http://localhost/index.php?p=admin/install to finish setting up CraftCMS\n\
+RUN echo "\n\
+* * * * * * * * * * * * * * * * * * * * * * * * * * * *\n\
+\n\
+Important!\n\
+\n\
+1. Open http://localhost/index.php?p=admin/install to finish setting up CraftCMS\n\
+2. Run 'docker exec -it <pid> sh' and then 'certbot --apache' to configure SSL\n\
+\n\
 * * * * * * * * * * * * * * * * * * * * * * * * * * * *"
