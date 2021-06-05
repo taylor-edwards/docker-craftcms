@@ -8,8 +8,8 @@ First time set up:
 - Create an `.env` file from the template below and provide info for the Postgres configuration
 - Build images and start containers with `docker-compose up`
 - For local development:
-    - Access the site at [localhost](http://localhost) or add `127.0.0.1 craft.dev` to `/etc/hosts` to access it at [craft.dev](http://craft.dev)
-    - Run the [CraftCMS installer](http://localhost/index.php?p=admin/install) after first start up
+    - To access the site add `127.0.0.1 craft.dev` to `/etc/hosts` then visit [craft.dev](http://craft.dev)
+    - Run the [CraftCMS installer](http://craft.dev/index.php?p=admin/install) after first start up
 - For production releases:
     - Set the `ServerName` in `vhost.conf` to your fully-qualified domain name. Add VirtualHost blocks and configure as needed for any subdomains or other configuration your site needs
     - Access the site at your fully-qualified domain (FQDN), e.g. _example.com_
@@ -24,14 +24,14 @@ The minimum `.env` file must include:
 DB_DRIVER=pgsql
 DB_SERVER=postgres
 DB_PORT=5432
-DB_DATABASE=
+DB_DATABASE=craft_db
 DB_USER=
 DB_PASSWORD=
 
 # Configure Postgres
+POSTGRES_DB=craft_db
 POSTGRES_USER=
 POSTGRES_PASSWORD=
-POSTGRES_DB=
 ```
 
 Managing the service locally:
@@ -46,15 +46,15 @@ docker exec -it $CONTAINER_ID certbot --apache
 docker-compose stop
 ```
 
-The first time you access the site you'll have to run through CraftCMS's
-install process. You can reach the page at [http://localhost/index.php?p=admin/install](http://localhost/index.php?p=admin/install).
-
 ## Help
 
 You can manually verify docker volumes by attaching them to a temporary container:
 ```sh
-docker run -it -v "craft_www:/var/www" debian sh
-# in container:
+# verify volume name exists:
+docker volume list
+# start a debian container and run shell in it with the volume attached:
+docker run -it -v "docker-craftcms_www:/www" debian sh
+# inspect from within the container:
 ls -la /var/www
 ```
 
