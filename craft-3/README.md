@@ -1,6 +1,6 @@
 ## Getting started
 
-Docker scripts for managing [CraftCMS](https://craftcms.com) 3.x installations with Postgres and certbot from Let's Encrypt.
+Docker scripts for managing [Craft CMS](https://craftcms.com) 3.x installations with [Postgres](https://www.postgresql.org/) and [certbot](https://certbot.eff.org/).
 
 ### Create a new Craft 3 site
 
@@ -17,7 +17,7 @@ Docker scripts for managing [CraftCMS](https://craftcms.com) 3.x installations w
     - You should have `./www/.env`, `./www/config`, `./www/web`, etc
 2. Use the values from `./www/.env` to create and edit `./.env` based on the example below. Edit `./www/.env` to configure Postgres with `DB_DRIVER=pgsql` and `DB_SERVER=postgres`
 3. Make the Apache user owner of `./www`: `chown -R www-data:www-data www`
-4. Restore a Postgres backup by placing the `.sql` dump file in `./entry-db`
+4. Restore a Postgres backup by placing the `.sql` dump file in `./db-entry`
 5. Start everything with `docker-compose up`
 6. Access the site at [localhost](http://localhost)
 
