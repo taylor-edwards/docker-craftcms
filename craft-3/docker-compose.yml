@@ -1,0 +1,20 @@
+version: "3.3"
+services:
+  web:
+    build: .
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./certs:/etc/letsencrypt
+      - ./conf:/etc/apache2/sites-enabled
+      - ./www:/var/www
+  postgres:
+    image: postgres
+    ports:
+      - 5432:5432
+    env_file:
+      - .env
+    volumes:
+      - ./db-entry:/docker-entrypoint-initdb.d
+      - ./db-data:/var/lib/postgresql/data
