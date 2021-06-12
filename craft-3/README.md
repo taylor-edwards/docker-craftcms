@@ -4,7 +4,7 @@ Docker scripts for managing [Craft CMS](https://craftcms.com) 3.x installations 
 
 ### Create a new Craft 3 site
 
-1. Install Craft with `docker run -it --rm -v $(pwd)/www:/craft -w /craft composer:latest composer create-project craftcms/craft .`. Select "no" (default) when prompted to finish setting up.
+1. Install Craft to the `www` volume with `docker run -it --rm -v $(pwd)/www:/craft -w /craft composer:latest composer create-project craftcms/craft .`. Select "no" (default) when prompted to finish setting up.
 2. Create and edit `./.env` based on the example below. Edit `./www/.env` with your Postgres user and password. Use `postgres` for the server address instead of an IP.
 3. Make the Apache user owner of `./www`: `chown -R www-data:www-data www`
 4. Start everything with `docker-compose up`

@@ -1,16 +1,5 @@
 # Docker for Craft CMS
 
-This repo contains Docker scripts to create and manage [Craft CMS](https://craftcms.com) v2 and v3 web applications.
+This repo contains Docker scripts to create and manage [Craft CMS](https://craftcms.com) 2.x and 3.x web applications.
 
-Supported pre-configurations:
-
-* Craft v3
-    - PHP 7
-    - Postgres
-    - SSL/TLS
-* Craft v2
-    - PHP 7
-    - MySQL 5.6
-    - SSL/TLS
-
-Certificate handling for HTTPS support is provided by [certbot](https://certbot.eff.org/).
+Note that Craft publishes [an official image](https://hub.docker.com/r/craftcms/nginx) for hosting CraftCMS with nginx already; however, these images vary in that they use a persistent volume for Craft's files to make deploying updates as easy as using sFTP or rsync, they self-host [certbot](https://certbot.eff.org/), and the configuration includes support for Apache HTTPD with virtual hosts.
